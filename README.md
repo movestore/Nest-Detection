@@ -50,4 +50,4 @@ moveStack in Movebank format
 
 
 ### Null or error handling:
-**Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output might be NULL leading to errors. A warning is given in the App Logs.
+**Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output is the full data set. A warning is given in the App Logs.

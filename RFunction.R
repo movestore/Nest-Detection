@@ -50,8 +50,8 @@ rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", n
   ## what to do if there were no nesting attempts
   if (length(nest.table)==0) 
     {
-    logger.info("There were no nests detected in your data set. You might want to adapt your settings.") 
-    result <- NULL
+    logger.info("There were no nests detected in your data set. You might want to adapt your settings. The full data set is given back as output.") 
+    result <- data
     } else
     {
     ## add age of birds (in days) to nest_location table
@@ -73,16 +73,16 @@ rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", n
     names(nest.table.x) <- names(nest.table)
     
     nest.table.df = dplyr::bind_rows(nest.table.x, .id = "individual.local.identifier")
-    #write.csv(nest.table.df,"nest_table.csv",row.names=FALSE)
-    write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
+    write.csv(nest.table.df,"nest_table.csv",row.names=FALSE)
+    #write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
     
     ## here need info about sex from Movebank
     ## boxplot of dispersal distance vs sex (maybe also vs fate/max age)
     
     nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
     
-    pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
-    #pdf("boxplot_dispersal.vs.sex.pdf")
+    #pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
+    pdf("boxplot_dispersal.vs.sex.pdf")
     boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,colours=rainbow(n=length(unique(nest.table.df$sex))),ylab="dispersal distance from natal nest (m)",xlab="sex")
     dev.off()
     
