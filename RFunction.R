@@ -8,9 +8,10 @@ library('nestR')
 #Select year example
 #The last parameter with the name data is the result of the previous app
 #   -> Should be removed if no data should be provided from previous app
-rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
+rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
   
   Sys.setenv(tz="GMT") 
+  options(scipen=999)
   
   id <- trackId(data)
   date <- timestamps(data)
@@ -38,16 +39,22 @@ rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", n
                              discard_overlapping = discard.overlapping)
     return(nest_attempts)
   })
+  #save(nest.output, file="nestR.output.RData")
+  #load("nestR.output.RData")
 
   ### create output file
   nest.table=lapply(nest.output, function(x) x[-2])
   nest.table=lapply(nest.table,function(i) do.call("rbind",i))
 
   ## remove individuals that didn't breed
-  data.bf.split.nn = data.bf.split[-which(unlist(lapply(nest.table,nrow))==0)]
-  nest.table = nest.table[-which(unlist(lapply(nest.table,nrow))==0)]
+  leer <- which(unlist(lapply(nest.table,nrow))==0)
+  if (length(leer)>0)
+  {
+    data.bf.split.nn = data.bf.split[-leer]
+    nest.table = nest.table[-leer]
+  } else data.bf.split.nn <- data.bf.split
 
-  ## what to do if there were no nesting attempts
+  ## what to do if there were no nesting attempts for all individuals
   if (length(nest.table)==0) 
     {
     logger.info("There were no nests detected in your data set. You might want to adapt your settings. The full data set is given back as output.") 
@@ -73,20 +80,21 @@ rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", n
     names(nest.table.x) <- names(nest.table)
     
     nest.table.df = dplyr::bind_rows(nest.table.x, .id = "individual.local.identifier")
-    write.csv(nest.table.df,"nest_table.csv",row.names=FALSE)
-    #write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
+    #write.csv(nest.table.df,"nest_table.csv",row.names=FALSE)
+    write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
     
     ## here need info about sex from Movebank
     ## boxplot of dispersal distance vs sex (maybe also vs fate/max age)
     
     nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
+    n.sex <- length(unique(nest.table.df$sex))
     
-    #pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
-    pdf("boxplot_dispersal.vs.sex.pdf")
-    boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,colours=rainbow(n=length(unique(nest.table.df$sex))),ylab="dispersal distance from natal nest (m)",xlab="sex")
+    pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
+    #pdf("boxplot_dispersal.vs.sex.pdf")
+    boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,colours=rainbow(n=length(unique(nest.table.df$sex))),ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
     dev.off()
     
-    #plot breeding movement in map with nest location (+buffer circle). one page per ID
+    #extract breeding movement locations to "results" of App for plotting in next App
     data.split <- move::split(data)
     nest.data <- foreach (nest.table.b = nest.table.df$burst) %do% {
       nest.table.i <- nest.table.df[nest.table.df$burst==nest.table.b,]
@@ -97,7 +105,7 @@ rFunction = function(year, data, sea.start="2000-01-01", sea.end="2000-12-31", n
     names(nest.data) <- nest.table.df$burst
    
     nest.data.nozero <- nest.data[unlist(lapply(nest.data, length) > 0)]
-    result <- moveStack(nest.data.nozero) #return track segments in breeding modus
+    result <- moveStack(nest.data.nozero,forceTz="UTC") #return track segments in breeding modus
   }
   
   return(result) 
