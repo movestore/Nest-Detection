@@ -10,7 +10,7 @@ library('nestR')
 #   -> Should be removed if no data should be provided from previous app
 rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
   
-  Sys.setenv(tz="GMT") 
+  Sys.setenv(tz="UTC") 
   options(scipen=999)
   
   id <- trackId(data)
