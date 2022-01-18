@@ -84,14 +84,14 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
     
     ## here need info about sex from Movebank
-    ## boxplot of dispersal distance vs sex (maybe also vs fate/max age)
+    ## boxplot of dispersal distance vs sex
     
     nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
     n.sex <- length(unique(nest.table.df$sex))
-    
+
     pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
     #pdf("boxplot_dispersal.vs.sex.pdf")
-    boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,colours=rainbow(n=length(unique(nest.table.df$sex))),ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
+    if (all(is.na(nest.table.df$sex))) boxplot(nest.table.df$dispersal_distance,ylab="dispersal distance from natal nest (m)",col=rainbow(n.sex)) else boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
     dev.off()
     
     #extract breeding movement locations to "results" of App for plotting in next App
