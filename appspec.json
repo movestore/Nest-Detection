@@ -69,6 +69,13 @@
       "description": "Select if you want to select only one breeding attempt if the found nests temporally overlap. Default: true",
       "defaultValue": true,
       "type": "CHECKBOX"
+    },
+	{
+      "id": "make.boxplot",
+      "name": "Return boxplot of dispersal distances",
+      "description": "Select if you want a boxplot of dispersal distances returned as pdf product to download. If sex is available in your data set, the boxplot will be split by it. Default: false",
+      "defaultValue": false,
+      "type": "CHECKBOX"
     }
   ],
   "dependencies": {

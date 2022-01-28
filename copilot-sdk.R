@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "input.rds"
+inputFileName = "App-Output Workflow_Instance_001__Movebank__2022-01-28_10-50-08.rds"
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,16 +17,17 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["sea.start"]] = "2014-02-01T00:00:00.000Z"
-args[["sea.end"]] = "2014-09-30T00:00:00.000Z"
-args[["nest.cycle"]] = 110
-args[["buffer"]] = 40
+args[["sea.start"]] = "2017-04-01T00:00:00.000Z"
+args[["sea.end"]] = "2014-07-31T00:00:00.000Z"
+args[["nest.cycle"]] = 28
+args[["buffer"]] = 30
 args[["min.pts"]] = 5
 args[["min.d.fix"]] = 5
-args[["min.consec"]] = 80
+args[["min.consec"]] = 2
 args[["min.top.att"]] = 75
 args[["min.days.att"]] = 1
 args[["discard.overlapping"]] = TRUE
+args[["make.boxplot"]] = TRUE
 
 #################################################################
 #################################################################

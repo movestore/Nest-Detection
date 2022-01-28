@@ -8,7 +8,7 @@ library('nestR')
 #Select year example
 #The last parameter with the name data is the result of the previous app
 #   -> Should be removed if no data should be provided from previous app
-rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
+rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE,make.boxplot=FALSE) {
   
   Sys.setenv(tz="UTC") 
   options(scipen=999)
@@ -86,14 +86,17 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     ## here need info about sex from Movebank
     ## boxplot of dispersal distance vs sex
     
-    nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
-    n.sex <- length(unique(nest.table.df$sex))
+    if (make.boxplot==TRUE)
+    {
+      nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
+      n.sex <- length(unique(nest.table.df$sex))
+      
+      pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
+      #pdf("boxplot_dispersal.vs.sex.pdf")
+      if (all(is.na(nest.table.df$sex))) boxplot(nest.table.df$dispersal_distance,ylab="dispersal distance from natal nest (m)",col=rainbow(n.sex)) else boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
+      dev.off()
+    }
 
-    pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
-    #pdf("boxplot_dispersal.vs.sex.pdf")
-    if (all(is.na(nest.table.df$sex))) boxplot(nest.table.df$dispersal_distance,ylab="dispersal distance from natal nest (m)",col=rainbow(n.sex)) else boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
-    dev.off()
-    
     #extract breeding movement locations to "results" of App for plotting in next App
     data.split <- move::split(data)
     nest.data <- foreach (nest.table.b = nest.table.df$burst) %do% {

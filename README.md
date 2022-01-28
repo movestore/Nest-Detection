@@ -13,6 +13,8 @@ All parameters that can be set in the function find_nests() can also be defined 
 
 The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. After the nest locations have been extracted, this App calculates additionally the age of the animals (assuming tagging in their natal nests), the number of breeding years and the dispersal distance of each breeding attempt from the natal nest. The latter is visualised as a boxplot of females and males, if sex is available. Else a simple boxplot is returned (`boxplot_dispersal.pdf`). A csv table `nest_table.csv` of the nest properties is saved as an artefact, including information as the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html). Furthermore, age and dispersal_distance from the first location are provided in the csv file.
 
+Upon requrest, a boxplot of the dispersal distances is returned, split by sex if that information is in the data.
+
 The output of the App is a data set of all the locations within each nesting attempt of each animal. Each year of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Simple Leaflet Map`.
 
 ### Input data
@@ -48,6 +50,7 @@ moveStack in Movebank format
 
 `discard.overlapping`: Indication if to select only one breeding attempt if some of the detected breeding attempts temporally overlap. Default: true.
 
+`make.boxplot`: logical parameter indicating if a boxplot of dispersal distances (possibly split by sex) shall be returned as pdf file. Defaults to false.s
 
 ### Null or error handling:
 **Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output is the full data set. A warning is given in the App Logs.
