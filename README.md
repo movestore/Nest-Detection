@@ -4,18 +4,16 @@ MoveApps
 Github repository: *github.com/movestore/Nest-Detection*
 
 ## Description
-Detection of nest sites of attempted breeding with the function find_nests() of the R-package 'nestR'. Filters locations of breeding activity, provides a table of nesting properties and a boxplot comparing dispersal distance of males vs. females. Developed for a white stork use case.
+Detection of nest sites of attempted breeding with the function find_nests() of the R-package 'nestR'. Filters locations of breeding activity and provides a table of nesting properties. Developed for a white stork use case.
 
 ## Documentation
 This App allows use of the find_nests() function of the R-package 'nestR' which is documented here: https://github.com/picardis/nestR and https://rdrr.io/github/picardis/nestR/. A scientific paper explaining and using the package can be found here: https://trello.com/c/NhVPfOIt/5-nest-site-detection.
 
-All parameters that can be set in the function find_nests() can also be defined in the MoveApps settings. The range from the usual nesting duration of the species/population, the buffer area around the nest and the minimum percentage of locations per day necessary to be on the nest for it to be counted as breeding. See below for details.
+All parameters that can be set in the function find_nests() can also be defined in the MoveApps settings. They range from the usual nesting duration of the species/population, the buffer area around the nest and the minimum percentage of locations per day necessary to be on the nest for it to be counted as breeding. See below for details.
 
-The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. After the nest locations have been extracted, this App calculates additionally the age of the animals (assuming tagging in their natal nests), the number of breeding years and the dispersal distance of each breeding attempt from the natal nest. The latter is visualised as a boxplot of females and males, if sex is available. Else a simple boxplot is returned (`boxplot_dispersal.pdf`). A csv table `nest_table.csv` of the nest properties is saved as an artefact, including information as the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html). Furthermore, age and dispersal_distance from the first location are provided in the csv file.
+The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. A csv table `nest_table.csv` of the nest properties is saved as an product/artefact, including information as the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html).
 
-Upon requrest, a boxplot of the dispersal distances is returned, split by sex if that information is in the data.
-
-The output of the App is a data set of all the locations within each nesting attempt of each animal. Each year of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Simple Leaflet Map`.
+The output of the App is a data set of all the locations within each nesting attempt of each animal. Each nesting attempt of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Simple Leaflet Map`.
 
 ### Input data
 moveStack in Movebank format
@@ -26,8 +24,6 @@ moveStack in Movebank format
 
 ### Artefacts
 `nest_table.csv`: Overview of all properties of detected nesting attempts.
-
-`boxplot_dispersal.pdf`: boxplots of dispersal distances of all nesting attempts, if available then separated by sex (extracted from Movebank).
 
 ### Parameters 
 `sea_start`: Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.
@@ -49,8 +45,6 @@ moveStack in Movebank format
 `min.days.att`: Minimum percentage of days a buffer location has to be visited between the days of the first and last visit to be considered breeding attempt. Default 1.
 
 `discard.overlapping`: Indication if to select only one breeding attempt if some of the detected breeding attempts temporally overlap. Default: true.
-
-`make.boxplot`: logical parameter indicating if a boxplot of dispersal distances (possibly split by sex) shall be returned as pdf file. Defaults to false.s
 
 ### Null or error handling:
 **Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output is the full data set. A warning is given in the App Logs.

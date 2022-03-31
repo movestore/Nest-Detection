@@ -1,14 +1,12 @@
 library('move')
-library('plyr')
 library('dplyr')
-library('lubridate')
 library("foreach")
 library('nestR')
 
 #Select year example
 #The last parameter with the name data is the result of the previous app
 #   -> Should be removed if no data should be provided from previous app
-rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE,make.boxplot=FALSE) {
+rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
   
   Sys.setenv(tz="UTC") 
   options(scipen=999)
@@ -43,8 +41,8 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
   #load("nestR.output.RData")
 
   ### create output file
-  nest.table=lapply(nest.output, function(x) x[-2])
-  nest.table=lapply(nest.table,function(i) do.call("rbind",i))
+  nest.table <- lapply(nest.output, function(x) x[-2])
+  nest.table <- lapply(nest.table,function(i) do.call("rbind",i))
 
   ## remove individuals that didn't breed
   leer <- which(unlist(lapply(nest.table,nrow))==0)
@@ -61,56 +59,29 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     result <- data
     } else
     {
-    ## add age of birds (in days) to nest_location table
-    nest.table.x <- foreach (nest.table.i = nest.table) %do% {
-      data.bf.split.nn.i <- data.bf.split.nn[[which(names(data.bf.split.nn)==strsplit(nest.table.i$burst[1],"_")[[1]][1])]]
-      nest.table.i$age = (difftime(nest.table.i$first_date,  min(as.Date(data.bf.split.nn.i$date)),units = "days"))
+      nest.table.df = dplyr::bind_rows(nest.table, .id = "individual.local.identifier")
+      write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
       
-      ## count numbers of years that breeding has been attempted (0 is before any)
-      data.bf.split.nn.i$breed_year = 0
-      for (j in 1:nrow(nest.table.i)){
-        data.bf.split.nn.i[as.Date(data.bf.split.nn.i$date)>nest.table.i[j,"first_date"],"breed_year"] = data.bf.split.nn.i[as.Date(data.bf.split.nn.i$date)>nest.table.i[j,"first_date"],"breed_year"]+1
+      # extract all locations between first_date and last_date of detected breeding attempts -> into results so that can plot in next App
+      # first have to create unique burst names
+      data.split <- move::split(data)
+      
+      nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
+      
+      nest.data <- foreach (nest.table.b = nest.table.df$uburst) %do% {
+        nest.table.i <- nest.table.df[nest.table.df$uburst==nest.table.b,]
+        datai <- data.split[[which(names(data.split)==nest.table.i$individual.local.identifier)]]
+        nest.data.i <- datai[timestamps(datai)>=nest.table.i$first_date & timestamps(datai)<(nest.table.i$last_date+1)]
+        nest.data.i
       }
+      names(nest.data) <- nest.table.df$uburst
       
-      ### calculate dispersal distance for each breeding attempt (distance to first point of individual GPS tracks)
-      nest.table.i$dispersal_distance  <- apply(nest.table.i[,c("long","lat")],1,function(x) pointDistance(data.bf.split.nn.i[1,c("long","lat")],x,lonlat=TRUE))
-      
-      nest.table.i
+      nest.data.nozero <- nest.data[unlist(lapply(nest.data, length) > 0)]
+      result <- moveStack(nest.data.nozero,forceTz="UTC") #return track segments in breeding modus
     }
-    names(nest.table.x) <- names(nest.table)
     
-    nest.table.df = dplyr::bind_rows(nest.table.x, .id = "individual.local.identifier")
-    #write.csv(nest.table.df,"nest_table.csv",row.names=FALSE)
-    write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
-    
-    ## here need info about sex from Movebank
-    ## boxplot of dispersal distance vs sex
-    
-    if (make.boxplot==TRUE)
-    {
-      nest.table.df$sex <- apply(nest.table.df, 1, function(x) idData(data)$sex[make.names(idData(data)$local_identifier,allow_=FALSE)==x[1]])
-      n.sex <- length(unique(nest.table.df$sex))
-      
-      pdf(paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"), "boxplot_dispersal.vs.sex.pdf"))
-      #pdf("boxplot_dispersal.vs.sex.pdf")
-      if (all(is.na(nest.table.df$sex))) boxplot(nest.table.df$dispersal_distance,ylab="dispersal distance from natal nest (m)",col=rainbow(n.sex)) else boxplot(nest.table.df$dispersal_distance~nest.table.df$sex,ylab="dispersal distance from natal nest (m)",xlab="sex",col=rainbow(n.sex))
-      dev.off()
-    }
+  #### 31 March 2022 have simplified the App here to only return nesting attempts (without age or sex of bird, dispersal distance and boxplot)
 
-    #extract breeding movement locations to "results" of App for plotting in next App
-    data.split <- move::split(data)
-    nest.data <- foreach (nest.table.b = nest.table.df$burst) %do% {
-      nest.table.i <- nest.table.df[nest.table.df$burst==nest.table.b,]
-      datai <- data.split[[which(names(data.split)==nest.table.i$individual.local.identifier)]]
-      nest.data.i <- datai[timestamps(datai)>=nest.table.i$first_date & timestamps(datai)<(nest.table.i$last_date+1)]
-      nest.data.i
-    }
-    names(nest.data) <- nest.table.df$burst
-   
-    nest.data.nozero <- nest.data[unlist(lapply(nest.data, length) > 0)]
-    result <- moveStack(nest.data.nozero,forceTz="UTC") #return track segments in breeding modus
-  }
-  
   return(result) 
 
 }

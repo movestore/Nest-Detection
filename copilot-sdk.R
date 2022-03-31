@@ -2,7 +2,8 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "App-Output Workflow_Instance_001__Movebank__2022-01-28_10-50-08.rds"
+#inputFileName = "LWFG_input_1May-1Aug.rds"
+inputFileName = "App-Output Workflow_Instance_001__Remove_Outliers__2022-03-31_09-28-35.rds"
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,17 +18,17 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["sea.start"]] = "2017-04-01T00:00:00.000Z"
-args[["sea.end"]] = "2014-07-31T00:00:00.000Z"
-args[["nest.cycle"]] = 28
-args[["buffer"]] = 30
+# LWFG: no nests detected with these settings
+args[["sea.start"]] = "2016-05-20T00:00:00.000Z"
+args[["sea.end"]] = "2016-07-20T00:00:00.000Z"
+args[["nest.cycle"]] = 25
+args[["buffer"]] = 100
 args[["min.pts"]] = 5
-args[["min.d.fix"]] = 5
-args[["min.consec"]] = 2
-args[["min.top.att"]] = 75
-args[["min.days.att"]] = 1
+args[["min.d.fix"]] = 50
+args[["min.consec"]] = 3
+args[["min.top.att"]] = 50
+args[["min.days.att"]] = 50
 args[["discard.overlapping"]] = TRUE
-args[["make.boxplot"]] = TRUE
 
 #################################################################
 #################################################################
