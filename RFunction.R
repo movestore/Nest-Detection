@@ -60,21 +60,35 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     } else
     {
       nest.table.df = dplyr::bind_rows(nest.table, .id = "individual.local.identifier")
+      nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
       write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
+      
+      # make move object of nest table (to output as additional movestack rds - to be used with Cloud Storage App later)
+      nest.table.move <- move(x=nest.table.df$long,y=nest.table.df$lat,time=sort(as.POSIXct(nest.table.df$first_date),tz="UTC")+seq(along=nest.table.df[,1]),data=nest.table.df,proj=projection(data),animal="nest")
+
+      # start/end... times must be character class
+      nest.table.move@data$first_date <- as.character(nest.table.move@data$first_date)
+      nest.table.move@data$last_date <- as.character(nest.table.move@data$last_date)
+      nest.table.move@data$attempt_start <- as.character(nest.table.move@data$attempt_start)
+      nest.table.move@data$attempt_end <- as.character(nest.table.move@data$attempt_end)
+
+      attr(timestamps(nest.table.move),'tzone') <- "UTC"
+      nest.table.rds <- moveStack(nest.table.move,forceTz="UTC")
+      saveRDS(nest.table.rds,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.rds"))
       
       # extract all locations between first_date and last_date of detected breeding attempts -> into results so that can plot in next App
       # first have to create unique burst names
       data.split <- move::split(data)
       
-      nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
-      
       nest.data <- foreach (nest.table.b = nest.table.df$uburst) %do% {
         nest.table.i <- nest.table.df[nest.table.df$uburst==nest.table.b,]
-        datai <- data.split[[which(names(data.split)==nest.table.i$individual.local.identifier)]]
-        nest.data.i <- datai[timestamps(datai)>=nest.table.i$first_date & timestamps(datai)<(nest.table.i$last_date+1)]
+        datai <- data.split[[which(names(data.split)==nest.table.i$individual.local.identifier)]] #these names are trackIds of the incoming data set, ok
+        nest.data.i <- datai[timestamps(datai)>=nest.table.i$first_date & timestamps(datai)<(nest.table.i$last_date+1)] #so, we get the track of each nesting attempt, i.e. quite some duplicate data (but ok, so that can visualise them in next App)
         nest.data.i
       }
-      names(nest.data) <- nest.table.df$uburst
+      names(nest.data) <- nest.table.df$uburst #names are the breeding attempt unique burst IDs
+      
+      #nest.data <- c(nest.data,"nest"=nest.table.move)
       
       nest.data.nozero <- nest.data[unlist(lapply(nest.data, length) > 0)]
       result <- moveStack(nest.data.nozero,forceTz="UTC") #return track segments in breeding modus
