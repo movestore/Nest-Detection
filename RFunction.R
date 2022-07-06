@@ -61,20 +61,20 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     {
       nest.table.df = dplyr::bind_rows(nest.table, .id = "individual.local.identifier")
       nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
-      write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
       
-      # make move object of nest table (to output as additional movestack rds - to be used with Cloud Storage App later)
-      nest.table.move <- move(x=nest.table.df$long,y=nest.table.df$lat,time=sort(as.POSIXct(nest.table.df$first_date),tz="UTC")+seq(along=nest.table.df[,1]),data=nest.table.df,proj=projection(data),animal="nest")
-
-      # start/end... times must be character class
-      nest.table.move@data$first_date <- as.character(nest.table.move@data$first_date)
-      nest.table.move@data$last_date <- as.character(nest.table.move@data$last_date)
-      nest.table.move@data$attempt_start <- as.character(nest.table.move@data$attempt_start)
-      nest.table.move@data$attempt_end <- as.character(nest.table.move@data$attempt_end)
-
-      attr(timestamps(nest.table.move),'tzone') <- "UTC"
-      nest.table.rds <- moveStack(nest.table.move,forceTz="UTC")
-      saveRDS(nest.table.rds,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.rds"))
+      # add columns so that this csv can be read with Cloud Storage App
+      nest.table.df$timestamp <- paste0(as.character(nest.table.df$first_date)," 00:00:00.000")
+      names(nest.table.df)[names(nest.table.df) %in% c("long","lat")] <- c("location.long","location.lat")
+      nest.table.df$sensor.type <- "GPS"
+      nest.table.df$individual.taxon.canonical.name <- "nest"
+      
+      nest.table.df$first_date <- as.character(nest.table.df$first_date)
+      nest.table.df$last_date <- as.character(nest.table.df$last_date)
+      nest.table.df$attempt_start <- as.character(nest.table.df$attempt_start)
+      nest.table.df$attempt_end <- as.character(nest.table.df$attempt_end)
+      
+      write.csv(nest.table.df,paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"nest_table.csv"),row.names=FALSE)
+      # --> this file can also be uploaded with the Cloud Storage App for further use
       
       # extract all locations between first_date and last_date of detected breeding attempts -> into results so that can plot in next App
       # first have to create unique burst names

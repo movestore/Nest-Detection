@@ -21,11 +21,8 @@ moveStack in Movebank format
 ### Output data
 moveStack in Movebank format
 
-
 ### Artefacts
-`nest_table.csv`: Overview of all properties of detected nesting attempts.
-
-`nest_table.rds`: Overview of all properties of detected nesting attempts in moveStack format for possible use in other Apps. Name of move object: `nest`.
+`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the Cloud Storage App for possible use in other Apps.
 
 ### Parameters 
 `sea_start`: Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.

@@ -2,8 +2,8 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-#inputFileName = "LWFG_input_1May-1Aug.rds"
-inputFileName = "App-Output Workflow_Instance_001__Remove_Outliers__2022-03-31_09-28-35.rds"
+inputFileName = "App-Output White_Storks_Germany__Filter_Data_by_Season__2022-07-05_09-43-59.rds"
+#inputFileName = "App-Output Workflow_Instance_001__Remove_Outliers__2022-03-31_09-28-35.rds"
 outputFileName = "output.rds"
 
 args <- list()
@@ -19,15 +19,15 @@ args <- list()
 
 # Add your arguments of your r function here
 # LWFG: no nests detected with these settings
-args[["sea.start"]] = "2016-05-20T00:00:00.000Z"
-args[["sea.end"]] = "2016-07-20T00:00:00.000Z"
-args[["nest.cycle"]] = 25
-args[["buffer"]] = 100
+args[["sea.start"]] = "2016-03-01T00:00:00.000Z"
+args[["sea.end"]] = "2016-08-30T00:00:00.000Z"
+args[["nest.cycle"]] = 150
+args[["buffer"]] = 40
 args[["min.pts"]] = 5
-args[["min.d.fix"]] = 50
-args[["min.consec"]] = 3
-args[["min.top.att"]] = 50
-args[["min.days.att"]] = 50
+args[["min.d.fix"]] = 5
+args[["min.consec"]] = 80
+args[["min.top.att"]] = 75
+args[["min.days.att"]] = 1
 args[["discard.overlapping"]] = TRUE
 
 #################################################################
