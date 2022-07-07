@@ -59,14 +59,15 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     result <- data
     } else
     {
-      nest.table.df = dplyr::bind_rows(nest.table, .id = "individual.local.identifier")
+      nest.table.df = dplyr::bind_rows(nest.table, .id = "trackId")
       nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
       
       # add columns so that this csv can be read with Cloud Storage App
       nest.table.df$timestamp <- paste0(as.character(nest.table.df$first_date)," 00:00:00.000")
       names(nest.table.df)[names(nest.table.df) %in% c("long","lat")] <- c("location.long","location.lat")
-      nest.table.df$sensor.type <- "GPS"
-      nest.table.df$individual.taxon.canonical.name <- "nest"
+      nest.table.df$sensor.type <- "nestR"
+      nest.table.df$individual.taxon.canonical.name <- "nest" 
+      nest.table.df$individual.local.identifier <- "nesting"
       
       nest.table.df$first_date <- as.character(nest.table.df$first_date)
       nest.table.df$last_date <- as.character(nest.table.df$last_date)
@@ -82,9 +83,8 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
       
       nest.data <- foreach (nest.table.b = nest.table.df$uburst) %do% {
         nest.table.i <- nest.table.df[nest.table.df$uburst==nest.table.b,]
-        datai <- data.split[[which(names(data.split)==nest.table.i$individual.local.identifier)]] #these names are trackIds of the incoming data set, ok
+        datai <- data.split[[which(names(data.split)==nest.table.i$trackId)]] #these names are trackIds of the incoming data set, ok
         nest.data.i <- datai[timestamps(datai)>=as.POSIXct(nest.table.i$first_date) & timestamps(datai)<(as.POSIXct(nest.table.i$last_date)+1)] #so, we get the track of each nesting attempt, i.e. quite some duplicate data (but ok, so that can visualise them in next App)
-        nest.data.i
       }
       names(nest.data) <- nest.table.df$uburst #names are the breeding attempt unique burst IDs
 
