@@ -15,6 +15,8 @@ The extraction of the attempted nest locations can take a while for larger data 
 
 The output of the App is a data set of all the locations within each nesting attempt of each animal. Each nesting attempt of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Simple Leaflet Map`.
 
+The nest_table.csv can be used to upload with the Cloud Storage App and then as parameter for the Filter Data by Indiv Time or Nest Use by Radius Apps. Be careful to keep track of variable names. Note that timestamp is a place holder only.
+
 ### Input data
 moveStack in Movebank format
 
@@ -22,7 +24,7 @@ moveStack in Movebank format
 moveStack in Movebank format
 
 ### Artefacts
-`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the Cloud Storage App for possible use in other Apps.
+`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the Cloud Storage App for possible use in other Apps. Note that timestamp is a place holder only.
 
 ### Parameters 
 `sea_start`: Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.

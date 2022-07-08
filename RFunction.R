@@ -61,9 +61,12 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
     {
       nest.table.df = dplyr::bind_rows(nest.table, .id = "trackId")
       nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
+      n <- dim(nest.table.df)[1]
       
       # add columns so that this csv can be read with Cloud Storage App
-      nest.table.df$timestamp <- paste0(as.character(nest.table.df$first_date)," 00:00:00.000")
+      #nest.table.df$timestamp <- paste0(as.character(nest.table.df$first_date)," 00:00:00.000") #didnt import properly, as must be unique and ordered, better -->
+      nest.table.df$timestamp <- paste0(as.character(min(as.POSIXct(nest.table.df$first_date))+c(1:n)),".000") # place holder for import only
+      
       names(nest.table.df)[names(nest.table.df) %in% c("long","lat")] <- c("location.long","location.lat")
       nest.table.df$sensor.type <- "nestR"
       nest.table.df$individual.taxon.canonical.name <- "nest" 
