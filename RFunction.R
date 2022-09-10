@@ -72,6 +72,9 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
       nest.table.df$individual.taxon.canonical.name <- "nest" 
       nest.table.df$individual.local.identifier <- "nesting"
       
+      nest.table.df$visit_dur <- difftime(nest.table.df$last_date,nest.table.df$first_date,units="days")
+      nest.table.df$attempt_dur <- difftime(nest.table.df$attempt_end,nest.table.df$attempt_start,units="days")
+      
       nest.table.df$first_date <- as.character(nest.table.df$first_date)
       nest.table.df$last_date <- as.character(nest.table.df$last_date)
       nest.table.df$attempt_start <- as.character(nest.table.df$attempt_start)
