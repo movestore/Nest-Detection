@@ -1,4 +1,4 @@
-# Nest Detection
+# Nest Cluster Detection
 MoveApps
 
 Github repository: *github.com/movestore/Nest-Detection*
@@ -26,26 +26,26 @@ moveStack in Movebank format
 ### Artefacts
 `nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the Cloud Storage App for possible use in other Apps. Note that timestamp is a place holder only.
 
-### Parameters 
-`sea_start`: Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.
+### Settings 
+**Start date of breeding season. (`sea_start`):** Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.
 
-`sea_end`: End date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 31 December.
+**End date of breeding season. (`sea_end`):** End date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 31 December.
 
-`nest.cycle`: Duration (in days) of a complete nesting attempt, i.e. the time until the young have successfully hatched. Default 100 days.
+**Duration of a nesting cycle (`nest.cycle`):** Duration (in days) of a complete nesting attempt, i.e. the time until the young have successfully hatched. Default 100 days.
 
-`buffer`: Buffer radius (m) within which locations shall count as nest revisits. This often relates to your general location inaccuracy. Default 30.
+**Size of the buffer to compute location revisitation (`buffer`):** Buffer radius (m) within which locations shall count as nest revisits. This often relates to your general location inaccuracy. Default 30.
 
-`min.pts`: Minimum number of points within a buffer that need to fall within the buffer for a point to be considered as a potential nest candidate. Default 5.
+**Minimum number of points wihtin a buffer (`min.pts`):** Minimum number of points within a buffer that need to fall within the buffer for a point to be considered as a potential nest candidate. Default 5.
 
-`min.d.fit`: Minimum number of fixed locations that have to be available in a day with no visits for that day to be retained when counting consecutive days visited. (i.e. missed visit due to data sparseness). Default 5.
+**Minimum number of fixes for a day to be retained if no nest visit was recorded. (`min.d.fit`):** Minimum number of fixed locations that have to be available in a day with no visits for that day to be retained when counting consecutive days visited. (i.e. missed visit due to data sparseness). Default 5.
 
-`min.consec`: Minimum necessary number of consecutive days visited in the longest series to be considered breeding attempt. Default 80.
+**Minimum number of consecutive days visited (`min.consec`):** Minimum necessary number of consecutive days visited in the longest series to be considered breeding attempt. Default 80.
 
-`min.top.att`: Minimum necessary percentage of fixes at the location on the day with most visits to be considered a breeding attempt. Default 75.
+**Minimum percentage of fixes at a location on the day with maximum attendance (`min.top.att`):** Minimum necessary percentage of fixes at the location on the day with most visits to be considered a breeding attempt. Default 75.
 
-`min.days.att`: Minimum percentage of days a buffer location has to be visited between the days of the first and last visit to be considered breeding attempt. Default 1.
+**Minimum percentage of days spent at a location between the first and last visit (`min.days.att`):** Minimum percentage of days a buffer location has to be visited between the days of the first and last visit to be considered breeding attempt. Default 1.
 
-`discard.overlapping`: Indication if to select only one breeding attempt if some of the detected breeding attempts temporally overlap. Default: true.
+**Discard overlapping (`discard.overlapping`):** Indication if to select only one breeding attempt if some of the detected breeding attempts temporally overlap. Default: true.
 
 ### Null or error handling:
 **Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output is the full data set. A warning is given in the App Logs.
