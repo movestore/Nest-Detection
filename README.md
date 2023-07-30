@@ -7,7 +7,7 @@ Github repository: *github.com/movestore/Nest-Detection*
 Detection of nest sites of attempted breeding with the function find_nests() of the R-package 'nestR'. Filters locations of breeding activity and provides a table of nesting properties. Developed for a white stork use case.
 
 ## Documentation
-This App allows use of the find_nests() function of the R-package 'nestR' which is documented here: https://github.com/picardis/nestR and https://rdrr.io/github/picardis/nestR/. A scientific paper explaining and using the package can be found here: https://trello.com/c/NhVPfOIt/5-nest-site-detection.
+This App allows use of the find_nests() function of the R-package 'nestR' which is documented here: https://github.com/picardis/nestR. The vignette can be viewed as pdf here: https://github.com/picardis/nestR/blob/master/inst/doc/nestR.pdf. A scientific paper explaining and using the package can be found here: https://trello.com/c/NhVPfOIt/5-nest-site-detection.
 
 All parameters that can be set in the function find_nests() can also be defined in the MoveApps settings. They range from the usual nesting duration of the species/population, the buffer area around the nest and the minimum percentage of locations per day necessary to be on the nest for it to be counted as breeding. See below for details.
 
