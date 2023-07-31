@@ -1,0 +1,6 @@
+Error log 
+
+Burst Prinzesschen (deploy_id:1930123)_2001: no locations revisited for more than 2 days
+Burst Prinzesschen (deploy_id:1930123)_2002: no locations revisited for more than 2 days
+Burst Prinzesschen (deploy_id:1930123)_2003: no locations revisited for more than 2 days
+Burst Prinzesschen (deploy_id:1930123)_2004: no locations revisited for more than 2 days
