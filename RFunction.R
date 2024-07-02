@@ -7,12 +7,12 @@ library('sf')
 #Select year example
 #The last parameter with the name data is the result of the previous app
 #   -> Should be removed if no data should be provided from previous app
-rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
+rFunction = function(data, sea.start="2000-01-01T00:00:00.000Z", sea.end="2000-12-31T23:59:59.999Z", nest.cycle=0, buffer=0, min.pts=0, min.d.fix=0, min.consec=0, min.top.att=0, min.days.att=0,discard.overlapping=TRUE) {
   
   Sys.setenv(tz="UTC") 
   options(scipen=999)
   
-  id <- mt_track_id(data)
+  id <- make.names(gsub(" ", "", mt_track_id(data)))
   date <- mt_time(data)
   
   ## add columns for find_nest function. burst: unique identifier of individual_year and date
@@ -35,7 +35,7 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
                              min_consec = min.consec,
                              min_top_att = min.top.att,
                              min_days_att = min.days.att,
-                             discard_overlapping = discard.overlapping)
+                             discard_overlapping = discard.overlapping) #this function needs to be carfully tested in MoveApps, as it writes temp files to "output/" and fails to remove them afterwards
     return(nest_attempts)
   })
   #save(nest.output, file="nestR.output.RData")
@@ -56,16 +56,15 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
   ## what to do if there were no nesting attempts for all individuals
   if (length(nest.table)==0) 
     {
-    logger.info("There were no nests detected in your data set. You might want to adapt your settings. The full data set is given back as output.") 
-    result <- data
+    logger.info("There were no nests detected in your data set. You might want to adapt your settings. NULL (an empty object) is given back as output.") 
+    result <-NULL
     } else
     {
-      nest.table.df = dplyr::bind_rows(nest.table, .id = "trackId")
+      nest.table.df = dplyr::bind_rows(nest.table, .id = "track")
       nest.table.df$uburst <- make.names(nest.table.df$burst,allow_=FALSE,unique=TRUE)
       n <- dim(nest.table.df)[1]
       
       # add columns so that this csv can be read with Cloud Storage App
-      #nest.table.df$timestamp <- paste0(as.character(nest.table.df$first_date)," 00:00:00.000") #didnt import properly, as must be unique and ordered, better -->
       nest.table.df$timestamp <- paste0(as.character(min(as.POSIXct(nest.table.df$first_date))+c(1:n)),".000") # place holder for import only
       
       names(nest.table.df)[names(nest.table.df) %in% c("long","lat")] <- c("location_long","location_lat")
@@ -90,13 +89,13 @@ rFunction = function(data, sea.start="2000-01-01", sea.end="2000-12-31", nest.cy
       
       nest.data <- foreach (nest.table.b = nest.table.df$uburst) %do% {
         nest.table.i <- nest.table.df[nest.table.df$uburst==nest.table.b,]
-        datai <- data.split[[which(names(data.split)==nest.table.i$trackId)]] #these names are trackIds of the incoming data set, ok
+        datai <- data.split[[which(make.names(gsub(" ", "",names(data.split)))==nest.table.i$track)]] #these names are trackIds of the incoming data set, ok
         nest.data.i <- datai[mt_time(datai)>=as.POSIXct(nest.table.i$first_date) & mt_time(datai)<(as.POSIXct(nest.table.i$last_date)+1),] #so, we get the track of each nesting attempt, i.e. quite some duplicate data (but ok, so that can visualise them in next App)
       }
       names(nest.data) <- nest.table.df$uburst #names are the breeding attempt unique burst IDs
 
       #nest.data.nozero <- nest.data[unlist(lapply(nest.data, length) > 0)] #not necessary for move2
-      result <- stack(nest.data,.combine="rename") #return track segments in breeding modus
+      result <- mt_stack(nest.data,.track_combine="rename") #return track segments in breeding modus
     }
     
   #### 31 March 2022 have simplified the App here to only return nesting attempts (without age or sex of bird, dispersal distance and boxplot)

@@ -11,20 +11,20 @@ This App allows use of the find_nests() function of the R-package 'nestR' which 
 
 All parameters that can be set in the function find_nests() can also be defined in the MoveApps settings. They range from the usual nesting duration of the species/population, the buffer area around the nest and the minimum percentage of locations per day necessary to be on the nest for it to be counted as breeding. See below for details.
 
-The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. A csv table `nest_table.csv` of the nest properties is saved as an product/artefact, including information as the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html).
+The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. A csv table `nest_table.csv` of the nest properties is saved as an product/artefact, including information like the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html).
 
-The output of the App is a data set of all the locations within each nesting attempt of each animal. Each nesting attempt of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Simple Leaflet Map`.
+The output of the App is a data set of all the locations within each nesting attempt of each animal. Each nesting attempt of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Interactive Map (leaflet)`.
 
-The nest_table.csv can be used to upload with the Cloud Storage App and then as parameter for the Filter Data by Indiv Time or Nest Use by Radius Apps. Be careful to keep track of variable names. Note that timestamp is a place holder only.
+The nest_table.csv can be used to upload with the `Upload from Cloud Storage` App and then as parameter for the ` Filter by Individual Time Intervals` or `Nest Use by Radius` Apps. Be careful to keep track of variable names. Note that timestamp is a place holder only.
 
 ### Input data
-moveStack in Movebank format
+move2 location object
 
 ### Output data
-moveStack in Movebank format
+move2 location object
 
 ### Artefacts
-`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the Cloud Storage App for possible use in other Apps. Note that timestamp is a place holder only.
+`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the `Upload from Cloud Storage` App for possible use in other Apps. Note that timestamp is a place holder only.
 
 ### Settings 
 **Start date of breeding season. (`sea_start`):** Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.

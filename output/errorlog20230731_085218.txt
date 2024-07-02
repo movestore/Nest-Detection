@@ -1,4 +1,0 @@
-Error log 
-
-Burst Prinzesschen (deploy_id:1930122)_1998: no locations revisited for more than 2 days
-Burst Prinzesschen (deploy_id:1930122)_1999: no locations revisited for more than 2 days

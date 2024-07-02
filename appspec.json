@@ -1,4 +1,5 @@
 {
+  "version": "1.2",
   "settings": [
     {
       "id": "sea.start",
@@ -74,7 +75,7 @@
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
       {
         "name": "foreach"
@@ -84,10 +85,12 @@
       },
 	  {
         "name": "nestR"
-      },
+      },   
+	  {
+        "name": "sf"
+      }
 	]
   },
-  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },
@@ -120,8 +123,5 @@
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
     }
-  ],
-  "documentation" : {
-    "url": "https://github.com/movestore/Nest-Detection/blob/main/README.md"
-  }
+  ]
 }
