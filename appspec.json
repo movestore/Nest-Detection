@@ -2,126 +2,76 @@
   "version": "1.2",
   "settings": [
     {
-      "id": "sea.start",
-      "name": "Start date of breeding season.",
-      "description": "Insert/Select a start date of your animals' breeding season. Narrowly specified breeding season windows give better results. Note that the year of this provided date is irrelevant.",
-      "defaultValue": "2000-01-01T00:00:00.000Z",
-      "type": "INSTANT"
-    },
-	{
-      "id": "sea.end",
-      "name": "End date of breeding season.",
-      "description": "Insert/Select an end date of your animals' breeding season. Narrowly specified breeding season windows give better results. Note that the year of this provided date is irrelevant.",
-      "defaultValue": "2000-12-31T00:00:00.000Z",
-      "type": "INSTANT"
-    },
-	{
-      "id": "nest.cycle",
-      "name": "Duration of a nesting cycle",
-      "description": "Insert the duration (in days) of a complete nesting attempt, i.e. the time until the young have successfully hatched.",
-      "defaultValue": 100,
-      "type": "INTEGER"
-    },
-	{
-      "id": "buffer",
-      "name": "Size of the buffer to compute location revisitation",
-      "description": "Insert buffer radius (m) within which locations shall count as nest revisits. This often relates to your general location inaccuracy (GPS e.g. 30 m)",
-      "defaultValue": 30,
-      "type": "DOUBLE"
+      "id": "sdk",
+      "name": "The name of the MoveApps SDK",
+      "description": "Showcase requesting a string input from the users of your app.",
+      "defaultValue": "MoveApps SDK",
+      "type": "STRING"
     },
     {
-      "id": "min.pts",
-      "name": "Minimum number of points wihtin a buffer",
-      "description": "Insert the minimum number of points within a buffer that need to fall within the buffer for a point to be considered as a potential nest candidate.",
-      "defaultValue": 5,
+      "id": "year",
+      "name": "The year",
+      "description": "Insert description for the year setting setting",
+      "defaultValue": 2022,
       "type": "INTEGER"
     },
     {
-      "id": "min.d.fix",
-      "name": "Minimum number of fixes for a day to be retained if no nest visit was recorded.",
-      "description": "Define the minimum number of fixed locations that have to be available in a day with no visits for that day to be retained when counting consecutive days visited. (i.e. missed visit due to data sparseness)",
-      "defaultValue": 5,
-      "type": "INTEGER"
-    },
-    {
-      "id": "min.consec",
-      "name": "Minimum number of consecutive days visited",
-      "description": "Define the minimum necessary number of consecutive days visited in the longest series to be considered breeding attempt.",
-      "defaultValue": 80,
-      "type": "INTEGER"
-    },
-	{
-      "id": "min.top.att",
-      "name": "Minimum percentage of fixes at a location on the day with maximum attendance",
-      "description": "Define the minimum necessary percentage of fixes at the location on the day with most visits to be considered a breeding attempt.",
-      "defaultValue": 75,
-      "type": "INTEGER"
-    },
-	{
-      "id": "min.days.att",
-      "name": "Minimum percentage of days spent at a location between the first and last visit",
-      "description": "Define the minimum percentage of days a buffer location has to be visited between the days of the first and last visit to be considered breeding attempt.",
-      "defaultValue": 1,
-      "type": "INTEGER"
-    },
-	{
-      "id": "discard.overlapping",
-      "name": "Discard overlapping",
-      "description": "Select if you want to select only one breeding attempt if the found nests temporally overlap. Default: true",
-      "defaultValue": true,
-      "type": "CHECKBOX"
+      "id": "auxiliary-file-a",
+      "name": "Personalization",
+      "description": "You can personalize the app by providing a file",
+      "type": "USER_FILE"
     }
   ],
   "dependencies": {
     "R": [
       {
-        "name": "move2"
+        "name": "lubridate"
       },
       {
-        "name": "foreach"
-      },
-	  {
-        "name": "dplyr"
-      },
-	  {
-        "name": "nestR"
-      },   
-	  {
-        "name": "sf"
+        "name": "move2"
       }
-	]
+    ]
   },
+  "providedAppFiles": [
+    {
+      "settingId": "auxiliary-file-a",
+      "from": "data/auxiliary/user-files/provided-app-files/auxiliary-file-a/sample.txt"
+    }
+  ],
   "license": {
     "key": "MIT"
   },
   "language": "eng",
   "keywords": [
-    "nestR",
-    "nest detection",
-    "find_nests",
-    "revisit",
-	"segmentation"
+    "example",
+    "template"
   ],
   "people": [
     {
-      "firstName": "Andrea",
+      "firstName": "Charles",
       "middleInitials": null,
-      "lastName": "Kölzsch",
-      "email": "akoelzsch@ab.mpg.de",
-      "roles": ["author", "creator"],
-      "orcid": "0000-0003-0193-1563",
-      "affiliation": "Max-Planck-Institute of Animal Behavior",
-      "affiliationRor": "https://ror.org/026stee22"
-    },
-	    {
-      "firstName": "Andrea",
-      "middleInitials": null,
-      "lastName": "Flack",
-      "email": "aflack@ab.mpg.de",
-      "roles": ["author"],
-      "orcid": "0000-0002-9099-2802",
-      "affiliation": "Max-Planck-Institute of Animal Behavior",
-      "affiliationRor": "https://ror.org/026stee22"
+      "lastName": "Darwin",
+      "email": "creator@example.com",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": null,
+      "affiliation": null,
+      "affiliationRor": null
+    }
+  ],
+  "funding": [
+    {
+      "name": "funder name",
+      "comment": "grant for App"
+    }
+  ],
+  "references": [
+    {
+      "type": "IsDescribedBy",
+      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
+      "url": "https://anylink.xyz"
     }
   ]
 }
