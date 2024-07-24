@@ -1,77 +1,51 @@
-# Name of App *(Give your app a short and informative title. Please adhere to our convention of Title Case without hyphens (e.g. My New App))*
-
+# Nest Cluster Detection
 MoveApps
 
-Github repository: *github.com/yourAccount/Name-of-App* *(provide the link to the repository where the code of the App can be found)*
+Github repository: *github.com/movestore/Nest-Detection*
 
 ## Description
-*Enter here the short description of the App that might also be used when filling out the description during App submission to MoveApps. This text is directly presented to Users that look through the list of Apps when compiling Workflows.*
+Detection of nest sites of attempted breeding with the function find_nests() of the R-package 'nestR'. Filters locations of breeding activity and provides a table of nesting properties. Developed for a white stork use case.
 
 ## Documentation
-*Enter here a detailed description of your App. What is it intended to be used for. Which steps of analyses are performed and how. Please be explicit about any detail that is important for use and understanding of the App and its outcomes. You might also refer to the sections below.*
+This App allows use of the find_nests() function of the R-package 'nestR' which is documented here: https://github.com/picardis/nestR. The vignette can be viewed as pdf here: https://github.com/picardis/nestR/blob/master/inst/doc/nestR.pdf. A scientific paper explaining and using the package can be found here: https://trello.com/c/NhVPfOIt/5-nest-site-detection.
 
-### Application scope
-#### Generality of App usability
-*State here if the App was developed for a specific species, taxon or taxonomic group, or to answer a specific question. How might it influence the scope and utility of the App. This information will help the user to understand why the App might be producing no or odd results.*
+All parameters that can be set in the function find_nests() can also be defined in the MoveApps settings. They range from the usual nesting duration of the species/population, the buffer area around the nest and the minimum percentage of locations per day necessary to be on the nest for it to be counted as breeding. See below for details.
 
-*Examples:*
+The extraction of the attempted nest locations can take a while for larger data sets, follow the progress in the App's Logs. A csv table `nest_table.csv` of the nest properties is saved as an product/artefact, including information like the first and last day the nest was visited, the total number of nest visits, the attendance percentage in days and others (see find_nests() R documentation: https://rdrr.io/github/picardis/nestR/man/find_nests.html).
 
-This App was developed using data of birds. 
+The output of the App is a data set of all the locations within each nesting attempt of each animal. Each nesting attempt of each animal is thus handled as a separate track. These tracks can easily be explored in a mapping App like `Interactive Map (leaflet)`.
 
-This App was developed using data of red deer. 
+The nest_table.csv can be used to upload with the `Upload from Cloud Storage` App and then as parameter for the ` Filter by Individual Time Intervals` or `Nest Use by Radius` Apps. Be careful to keep track of variable names. Note that timestamp is a place holder only.
 
-This App was developed for any taxonomic group. 
+### Input data
+move2 location object
 
-This App was developed to identify kill sites, but can probably be used to identify any kind of location clusters like nests, dens or drinking holes.
-
-#### Required data properties
-*State here the required and/or optimal data properties for this App to perform properly.*
-
-*Examples:*
-
-This App is only applicable to data that reflect range resident behavior. 
-
-The data should have a fix rate of at least 1 location per 30 minutes. 
-
-The App should work for any kind of (location) data.
-
-### Input type
-*Indicate which type of input data the App requires.*
-
-*Example*: `move2::move2_loc`
-
-### Output type
-*Indicate which type of output data the App produces to be passed on to subsequent Apps.*
-
-*Example:* `move2::move2_loc`
+### Output data
+move2 location object
 
 ### Artefacts
-*If the App creates artefacts (e.g. csv, pdf, jpeg, shapefiles, etc), please list them here and describe each.*
-
-*Example:* `rest_overview.csv`: csv-file with Table of all rest site properties
+`nest_table.csv`: Overview of all properties of detected nesting attempts. This file can also be read by the `Upload from Cloud Storage` App for possible use in other Apps. Note that timestamp is a place holder only.
 
 ### Settings 
-*Please list and define all settings/parameters that the App requires to be set by the App user, if necessary including their unit. Please first state the Setting name the user encounters in the Settings menu defined in the appspecs.json, and between brackets the argument used in the R function to be able to identify it quickly in the code if needed.*
+**Start date of breeding season. (`sea_start`):** Start date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 1 January.
 
-*Example:* `Radius of resting site` (radius): Defined radius the animal has to stay in for a given duration of time for it to be considered resting site. Unit: `metres`.
+**End date of breeding season. (`sea_end`):** End date of breeding season. Narrowly specified breeding season windows give better results. The year of this provided date is irrelevant. Default 31 December.
 
-### Changes in output data
-*Specify here how and if the App modifies the input data. Describe clearly what e.g. each additional column means.*
+**Duration of a nesting cycle (`nest.cycle`):** Duration (in days) of a complete nesting attempt, i.e. the time until the young have successfully hatched. Default 100 days.
 
-*Examples:*
+**Size of the buffer to compute location revisitation (`buffer`):** Buffer radius (m) within which locations shall count as nest revisits. This often relates to your general location inaccuracy. Default 30.
 
-The App adds to the input data the columns `Max_dist` and `Avg_dist`. They contain the maximum distance to the provided focal location and the average distance to it over all locations. 
+**Minimum number of points wihtin a buffer (`min.pts`):** Minimum number of points within a buffer that need to fall within the buffer for a point to be considered as a potential nest candidate. Default 5.
 
-The App filterers the input data as selected by the user. 
+**Minimum number of fixes for a day to be retained if no nest visit was recorded. (`min.d.fit`):** Minimum number of fixed locations that have to be available in a day with no visits for that day to be retained when counting consecutive days visited. (i.e. missed visit due to data sparseness). Default 5.
 
-The output data is the outcome of the model applied to the input data. 
+**Minimum number of consecutive days visited (`min.consec`):** Minimum necessary number of consecutive days visited in the longest series to be considered breeding attempt. Default 80.
 
-The input data remains unchanged.
+**Minimum percentage of fixes at a location on the day with maximum attendance (`min.top.att`):** Minimum necessary percentage of fixes at the location on the day with most visits to be considered a breeding attempt. Default 75.
 
-### Most common errors
-*Please describe shortly what most common errors of the App can be, how they occur and best ways of solving them.*
+**Minimum percentage of days spent at a location between the first and last visit (`min.days.att`):** Minimum percentage of days a buffer location has to be visited between the days of the first and last visit to be considered breeding attempt. Default 1.
 
-### Null or error handling
-*Please indicate for each setting as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if settings/parameters are improperly set and any other important information that you find the user should be aware of.*
+**Discard overlapping (`discard.overlapping`):** Indication if to select only one breeding attempt if some of the detected breeding attempts temporally overlap. Default: true.
 
-*Example:* **Setting `radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
+### Null or error handling:
+**Data:** All locations in breeding attempts are returned as output. If there are no breeding attempts detected in your data set the output is the full data set. A warning is given in the App Logs.

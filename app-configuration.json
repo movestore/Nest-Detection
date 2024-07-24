@@ -1,4 +1,12 @@
 {
-    "sdk": "MoveApps R SDK",
-    "year": 2014
+    "sea.start":"2000-03-01T00:00:00.000Z",
+    "sea.end":"2000-08-30T00:00:00.000Z",
+    "nest.cycle": 150,
+    "buffer": 40,
+    "min.pts": 5,
+    "min.d.fix": 5,
+    "min.consec": 80,
+    "min.top.att": 75,
+    "min.days.att": 1,
+    "discard.overlapping": true
 }
