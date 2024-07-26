@@ -1,0 +1,26 @@
+{
+    "id": "A82ED276",
+    "path": "~/GitHub/Template_R_Function_App/src/common/runtime_configuration.R",
+    "project_path": "src/common/runtime_configuration.R",
+    "type": "r_source",
+    "hash": "3117060374",
+    "contents": "",
+    "dirty": false,
+    "created": 1687416498844.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "0,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1687418040,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1687418040,
+    "read_only": false,
+    "read_only_alternatives": []
+}

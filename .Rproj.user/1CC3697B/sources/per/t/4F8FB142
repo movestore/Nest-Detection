@@ -1,0 +1,26 @@
+{
+    "id": "4F8FB142",
+    "path": "~/GitHub/Template_R_Function_App/tests/testthat/test_RFunction.R",
+    "project_path": "tests/testthat/test_RFunction.R",
+    "type": "r_source",
+    "hash": "3326344921",
+    "contents": "",
+    "dirty": false,
+    "created": 1687418068926.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "13,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1687422249,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1687422249142,
+    "read_only": false,
+    "read_only_alternatives": []
+}

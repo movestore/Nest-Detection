@@ -1,0 +1,26 @@
+{
+    "id": "52885C64",
+    "path": "~/GitHub/Template_R_Function_App/tests/testthat/testthat.R",
+    "project_path": "tests/testthat/testthat.R",
+    "type": "r_source",
+    "hash": "572741838",
+    "contents": "",
+    "dirty": false,
+    "created": 1687418082470.0,
+    "source_on_save": false,
+    "relative_order": 9,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "0,17",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1687416025,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1687416025,
+    "read_only": false,
+    "read_only_alternatives": []
+}
