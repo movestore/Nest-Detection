@@ -6,4 +6,3 @@
 data/output/**
 !data/output/.keep
 tests/testthat/plot.png
-files_move1
